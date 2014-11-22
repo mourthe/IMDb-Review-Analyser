@@ -49,7 +49,7 @@ namespace TFIDFExample
         /// <param name="documents">string[]</param>
         /// <param name="vocabularyThreshold">Minimum number of occurences of the term within all documents</param>
         /// <returns>double[][]</returns>
-        public static double[][] Transform(string[] documents, int vocabularyThreshold = 3)
+        public static double[][] Transform(ref string[] documents, int vocabularyThreshold = 3)
         {
             List<List<string>> stemmedDocs;
             List<string> vocabulary;

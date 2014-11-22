@@ -18,7 +18,7 @@ namespace TFIDFExample
             };
 
             // Apply TF*IDF to the documents and get the resulting vectors.
-            double[][] inputs = TFIDF.Transform(documents, 0);
+            double[][] inputs = TFIDF.Transform(ref documents, 0);
             inputs = TFIDF.Normalize(inputs);
 
             // Display the output.

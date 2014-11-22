@@ -6,10 +6,14 @@ using System.Threading.Tasks;
 
 namespace Main
 {
-    class Program
+    public class Program
     {
         static void Main(string[] args)
         {
+            var reader = new FileReader();
+            reader.InitializeReviews(@"..\..\..\..\dataset\neg");
+
+            TFIDFExample.TFIDF.Transform(ref reader.Reviews.Content);
         }
     }
 }

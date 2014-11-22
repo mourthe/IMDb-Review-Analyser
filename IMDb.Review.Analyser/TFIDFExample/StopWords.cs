@@ -10,7 +10,9 @@ namespace TFIDFExample
     {
         public static string[] stopWordsList = new string[]
         {
-			"a", 																													  
+			"a", 
+			"movi",
+			"movie",																							  
 			"about", 
 			"above", 
 			"across", 
