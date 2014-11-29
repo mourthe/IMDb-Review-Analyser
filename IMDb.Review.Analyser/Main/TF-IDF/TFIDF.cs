@@ -1,14 +1,12 @@
-﻿using EnglishStemmer;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
+using EnglishStemmer;
 
-namespace TFIDFExample
+namespace Main
 {
     /// <summary>
     /// Copyright (c) 2013 Kory Becker http://www.primaryobjects.com/kory-becker.aspx
@@ -47,9 +45,10 @@ namespace TFIDFExample
         /// If a vocabulary does not yet exist, one will be created, based upon the documents' words.
         /// </summary>
         /// <param name="documents">string[]</param>
+        /// <param name="reviews"></param>
         /// <param name="vocabularyThreshold">Minimum number of occurences of the term within all documents</param>
         /// <returns>double[][]</returns>
-        public static double[][] Transform(ref string[] documents, int vocabularyThreshold = 3)
+        public static void Transform(ref string[] documents, Reviews reviews, int vocabularyThreshold = 3)
         {
             List<List<string>> stemmedDocs;
             List<string> vocabulary;
@@ -68,7 +67,7 @@ namespace TFIDFExample
             }
 
             // Transform each document into a vector of tfidf values.
-            return TransformToTFIDFVectors(stemmedDocs, _vocabularyIDF);
+            TransformToTFIDFVectors(stemmedDocs, _vocabularyIDF, reviews);
         }
 
         /// <summary>
@@ -77,14 +76,14 @@ namespace TFIDFExample
         /// <param name="stemmedDocs">List of List of string</param>
         /// <param name="vocabularyIDF">Dictionary of string, double (term, IDF)</param>
         /// <returns>double[][]</returns>
-        private static double[][] TransformToTFIDFVectors(List<List<string>> stemmedDocs, Dictionary<string, double> vocabularyIDF)
+        private static void TransformToTFIDFVectors(List<List<string>> stemmedDocs, Dictionary<string, double> vocabularyIDF, Reviews reviews)
         {
-            // Transform each document into a vector of tfidf values.
-            List<List<double>> vectors = new List<List<double>>();
+            // Transform each document into a vector of tfidf values
             foreach (var doc in stemmedDocs)
             {
                 List<double> vector = new List<double>();
 
+                var i = 0;
                 foreach (var vocab in vocabularyIDF)
                 {
                     // Term frequency = count how many times the term appears in this document.
@@ -94,10 +93,8 @@ namespace TFIDFExample
                     vector.Add(tfidf);
                 }
 
-                vectors.Add(vector);
+                reviews.Score[i++] = vector.ToArray();
             }
-
-            return vectors.Select(v => v.ToArray()).ToArray();
         }
 
         /// <summary>

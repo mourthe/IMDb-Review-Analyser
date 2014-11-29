@@ -9,13 +9,13 @@ namespace Main
 {
     public class FileReader
     {
-        public Reviews Reviews;
+        public Reviews AllReviews;
         private int _idx;
 
         public FileReader()
         {
             _idx = 0;
-            Reviews = new Reviews();
+            AllReviews = new Reviews();
         }
 
         /// <summary>
@@ -30,7 +30,7 @@ namespace Main
             {
                 while (!reader.EndOfStream)
                 {
-                    Reviews.Content[_idx++] = reader.ReadLine();
+                    AllReviews.Content[_idx++] = reader.ReadLine();
                 }
             }
         }

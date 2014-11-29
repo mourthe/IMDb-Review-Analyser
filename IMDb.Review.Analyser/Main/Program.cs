@@ -11,9 +11,9 @@ namespace Main
         static void Main(string[] args)
         {
             var reader = new FileReader();
-            reader.InitializeReviews(@"..\..\..\..\dataset\neg");
+            reader.InitializeReviews(@"..\..\..\dataset\part1\neg");
 
-            TFIDFExample.TFIDF.Transform(ref reader.Reviews.Content);
+            TFIDF.Transform(ref reader.AllReviews.Content, reader.AllReviews);
         }
     }
 }
