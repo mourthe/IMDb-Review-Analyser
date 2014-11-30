@@ -8,6 +8,18 @@ using EnglishStemmer;
 
 namespace Main
 {
+    public class WordAndScore
+    {
+        public string Word;
+        public double Score;
+
+        public WordAndScore(string word, double score)
+        {
+            Word = word;
+            Score = score;
+        }
+    }
+
     /// <summary>
     /// Copyright (c) 2013 Kory Becker http://www.primaryobjects.com/kory-becker.aspx
     /// 
@@ -48,7 +60,7 @@ namespace Main
         /// <param name="reviews"></param>
         /// <param name="vocabularyThreshold">Minimum number of occurences of the term within all documents</param>
         /// <returns>double[][]</returns>
-        public static void Transform(ref string[] documents, Reviews reviews, int vocabularyThreshold = 3)
+        public static IList<string> Transform(ref string[] documents, ref Reviews reviews, int vocabularyThreshold = 3)
         {
             List<List<string>> stemmedDocs;
             List<string> vocabulary;
@@ -67,7 +79,7 @@ namespace Main
             }
 
             // Transform each document into a vector of tfidf values.
-            TransformToTFIDFVectors(stemmedDocs, _vocabularyIDF, reviews);
+            return TransformToTFIDFVectors(stemmedDocs, _vocabularyIDF, ref reviews);
         }
 
         /// <summary>
@@ -76,24 +88,48 @@ namespace Main
         /// <param name="stemmedDocs">List of List of string</param>
         /// <param name="vocabularyIDF">Dictionary of string, double (term, IDF)</param>
         /// <returns>double[][]</returns>
-        private static void TransformToTFIDFVectors(List<List<string>> stemmedDocs, Dictionary<string, double> vocabularyIDF, Reviews reviews)
+        private static List<string> TransformToTFIDFVectors(List<List<string>> stemmedDocs, Dictionary<string, double> vocabularyIDF, ref Reviews reviews)
         {
+            var i = 0;
+            var words = new List<WordAndScore>();
+
             // Transform each document into a vector of tfidf values
             foreach (var doc in stemmedDocs)
             {
                 List<double> vector = new List<double>();
-
-                var i = 0;
+                
                 foreach (var vocab in vocabularyIDF)
                 {
                     // Term frequency = count how many times the term appears in this document.
                     double tf = doc.Where(d => d == vocab.Key).Count();
                     double tfidf = tf * vocab.Value;
 
+                    AddOnWordsArray(ref words, vocab.Key, tfidf);
+
                     vector.Add(tfidf);
                 }
 
                 reviews.Score[i++] = vector.ToArray();
+            }
+            
+            return words.Select(word => word.Word).ToList();
+        }
+
+        private static void AddOnWordsArray(ref List<WordAndScore> words, string key, double tfidf)
+        {
+            var nWord = new WordAndScore(key, tfidf);
+            
+            if (words.Count < 80)
+            {
+                words.Add(nWord);
+            }
+            else
+            {
+                foreach (var word in words.Where(word => word.Score < tfidf))
+                {
+                    words.Remove(word);
+                    words.Add(nWord);
+                }
             }
         }
 

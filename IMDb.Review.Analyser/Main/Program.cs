@@ -13,7 +13,9 @@ namespace Main
             var reader = new FileReader();
             reader.InitializeReviews(@"..\..\..\dataset\part1\neg");
 
-            TFIDF.Transform(ref reader.AllReviews.Content, reader.AllReviews);
+            var topWords = TFIDF.Transform(ref reader.AllReviews.Content, ref reader.AllReviews);
+
+            reader.InitializeReviews(@"..\..\..\dataset\part1\pos");
         }
     }
 }
