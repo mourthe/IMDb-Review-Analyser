@@ -60,13 +60,13 @@ namespace Main
         /// <param name="reviews"></param>
         /// <param name="vocabularyThreshold">Minimum number of occurences of the term within all documents</param>
         /// <returns>double[][]</returns>
-        public static IList<string> Transform(ref string[] documents, ref Reviews reviews, int vocabularyThreshold = 3)
+        public static IList<string> Transform(ref string[] documents, ref Reviews reviews, bool isNeg, int vocabularyThreshold = 3)
         {
             List<List<string>> stemmedDocs;
             List<string> vocabulary;
 
             // Get the vocabulary and stem the documents at the same time.
-            vocabulary = GetVocabulary(documents, out stemmedDocs, vocabularyThreshold);
+            vocabulary = GetVocabulary(documents, out stemmedDocs, vocabularyThreshold, isNeg);
 
             Console.Clear();
             Console.WriteLine("Fills the _vocabulary");
@@ -235,7 +235,7 @@ namespace Main
         /// <param name="docs">string[]</param>
         /// <param name="stemmedDocs">List of List of string</param>
         /// <returns>Vocabulary (list of strings)</returns>
-        private static List<string> GetVocabulary(string[] docs, out List<List<string>> stemmedDocs, int vocabularyThreshold)
+        private static List<string> GetVocabulary(string[] docs, out List<List<string>> stemmedDocs, int vocabularyThreshold,  bool isNeg)
         {
             List<string> vocabulary = new List<string>();
             Dictionary<string, int> wordCountList = new Dictionary<string, int>();
@@ -262,7 +262,7 @@ namespace Main
                     // Strip non-alphanumeric characters.
                     string stripped = Regex.Replace(part, "[^a-zA-Z0-9]", "");
 
-                    if (!StopWords.stopWordsList.Contains(stripped.ToLower()))
+                    if (!StopWords.StopWordsList(isNeg).Contains(stripped.ToLower()))
                     {
                         try
                         {

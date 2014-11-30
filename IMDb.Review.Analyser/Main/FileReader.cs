@@ -34,5 +34,11 @@ namespace Main
                 }
             }
         }
+
+        public void Clear()
+        {
+            _idx = 0;
+            AllReviews = new Reviews();
+        }
     }
 }
