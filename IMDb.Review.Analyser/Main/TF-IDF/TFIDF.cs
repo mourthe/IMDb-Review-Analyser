@@ -68,6 +68,8 @@ namespace Main
             // Get the vocabulary and stem the documents at the same time.
             vocabulary = GetVocabulary(documents, out stemmedDocs, vocabularyThreshold);
 
+            Console.Clear();
+            Console.WriteLine("Fills the _vocabulary");
             if (_vocabularyIDF.Count == 0)
             {
                 // Calculate the IDF for each vocabulary term.
@@ -77,6 +79,7 @@ namespace Main
                     _vocabularyIDF[term] = Math.Log((double)stemmedDocs.Count / ((double)1 + numberOfDocsContainingTerm));
                 }
             }
+            Console.WriteLine("_vocabulary filled");
 
             // Transform each document into a vector of tfidf values.
             return TransformToTFIDFVectors(stemmedDocs, _vocabularyIDF, ref reviews);
@@ -90,6 +93,9 @@ namespace Main
         /// <returns>double[][]</returns>
         private static List<string> TransformToTFIDFVectors(List<List<string>> stemmedDocs, Dictionary<string, double> vocabularyIDF, ref Reviews reviews)
         {
+            Console.Clear();
+            Console.WriteLine("TFIDF Vectors");
+
             var i = 0;
             var words = new List<WordAndScore>();
 
@@ -105,13 +111,18 @@ namespace Main
                     double tfidf = tf * vocab.Value;
 
                     AddOnWordsArray(ref words, vocab.Key, tfidf);
-
+                    
                     vector.Add(tfidf);
                 }
 
+                if (i % 100 == 0)
+                    Console.WriteLine(i + "/12500");
+            
                 reviews.Score[i++] = vector.ToArray();
             }
             
+            Console.WriteLine("TFIDF finished");
+
             return words.Select(word => word.Word).ToList();
         }
 
@@ -125,9 +136,18 @@ namespace Main
             }
             else
             {
-                foreach (var word in words.Where(word => word.Score < tfidf))
+                var w = words[0];
+                for (var i = 1; i < 80; i++)
                 {
-                    words.Remove(word);
+                    if (w.Score < words[i].Score)
+                    {
+                        w = words[i];
+                    }
+                }
+
+                if (w.Score < nWord.Score)
+                {
+                    words.Remove(w);
                     words.Add(nWord);
                 }
             }
