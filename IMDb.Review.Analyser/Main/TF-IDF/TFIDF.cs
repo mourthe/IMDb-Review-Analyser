@@ -47,19 +47,8 @@ namespace Main
     /// </summary>
     public static class TFIDF
     {
-        /// <summary>
-        /// Document vocabulary, containing each word's IDF value.
-        /// </summary>
         private static Dictionary<string, double> _vocabularyIDF = new Dictionary<string, double>();
 
-        /// <summary>
-        /// Transforms a list of documents into their associated TF*IDF values.
-        /// If a vocabulary does not yet exist, one will be created, based upon the documents' words.
-        /// </summary>
-        /// <param name="documents">string[]</param>
-        /// <param name="reviews"></param>
-        /// <param name="vocabularyThreshold">Minimum number of occurences of the term within all documents</param>
-        /// <returns>double[][]</returns>
         public static IList<string> Transform(ref string[] documents, ref Reviews reviews, bool isNeg, int vocabularyThreshold = 3)
         {
             List<List<string>> stemmedDocs;
@@ -85,12 +74,6 @@ namespace Main
             return TransformToTFIDFVectors(stemmedDocs, _vocabularyIDF, ref reviews);
         }
 
-        /// <summary>
-        /// Converts a list of stemmed documents (lists of stemmed words) and their associated vocabulary + idf values, into an array of TF*IDF values.
-        /// </summary>
-        /// <param name="stemmedDocs">List of List of string</param>
-        /// <param name="vocabularyIDF">Dictionary of string, double (term, IDF)</param>
-        /// <returns>double[][]</returns>
         private static List<string> TransformToTFIDFVectors(List<List<string>> stemmedDocs, Dictionary<string, double> vocabularyIDF, ref Reviews reviews)
         {
             Console.Clear();
@@ -157,8 +140,6 @@ namespace Main
         /// Normalizes a TF*IDF array of vectors using L2-Norm.
         /// Xi = Xi / Sqrt(X0^2 + X1^2 + .. + Xn^2)
         /// </summary>
-        /// <param name="vectors">double[][]</param>
-        /// <returns>double[][]</returns>
         public static double[][] Normalize(double[][] vectors)
         {
             // Normalize the vectors using L2-Norm.
@@ -176,8 +157,6 @@ namespace Main
         /// Normalizes a TF*IDF vector using L2-Norm.
         /// Xi = Xi / Sqrt(X0^2 + X1^2 + .. + Xn^2)
         /// </summary>
-        /// <param name="vectors">double[][]</param>
-        /// <returns>double[][]</returns>
         public static double[] Normalize(double[] vector)
         {
             List<double> result = new List<double>();
