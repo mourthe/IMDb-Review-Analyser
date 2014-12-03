@@ -22,34 +22,33 @@ namespace Main
 
     public static class TFIDF
     {
-        private static Dictionary<string, double> _vocabularyIDF = new Dictionary<string, double>();
+        private static Dictionary<string, double> _vocabularyIdf = new Dictionary<string, double>();
 
         public static IList<string> Transform(ref string[] documents, ref Reviews reviews, bool isNeg, int vocabularyThreshold = 3)
         {
             List<List<string>> stemmedDocs;
-            List<string> vocabulary;
 
             // Get the vocabulary and stem the documents at the same time.
-            vocabulary = GetVocabulary(documents, out stemmedDocs, vocabularyThreshold, isNeg);
+            var vocabulary = GetVocabulary(documents, out stemmedDocs, vocabularyThreshold, isNeg);
 
             Console.Clear();
             Console.WriteLine("Fills the _vocabulary");
-            if (_vocabularyIDF.Count == 0)
+            if (_vocabularyIdf.Count == 0)
             {
                 // Calculate the IDF for each vocabulary term.
                 foreach (var term in vocabulary)
                 {
-                    double numberOfDocsContainingTerm = stemmedDocs.Where(d => d.Contains(term)).Count();
-                    _vocabularyIDF[term] = Math.Log((double)stemmedDocs.Count / ((double)1 + numberOfDocsContainingTerm));
+                    double numberOfDocsContainingTerm = stemmedDocs.Count(d => d.Contains(term));
+                    _vocabularyIdf[term] = Math.Log((double)stemmedDocs.Count / ((double)1 + numberOfDocsContainingTerm));
                 }
             }
             Console.WriteLine("_vocabulary filled");
 
             // Transform each document into a vector of tfidf values.
-            return TransformToTFIDFVectors(stemmedDocs, _vocabularyIDF, ref reviews);
+            return TransformToTfidfVectors(stemmedDocs, _vocabularyIdf, ref reviews);
         }
 
-        private static List<string> TransformToTFIDFVectors(List<List<string>> stemmedDocs, Dictionary<string, double> vocabularyIDF, ref Reviews reviews)
+        private static List<string> TransformToTfidfVectors(IEnumerable<List<string>> stemmedDocs, Dictionary<string, double> vocabularyIDF, ref Reviews reviews)
         {
             Console.Clear();
             Console.WriteLine("TFIDF Vectors");
@@ -60,13 +59,13 @@ namespace Main
             // Transform each document into a vector of tfidf values
             foreach (var doc in stemmedDocs)
             {
-                List<double> vector = new List<double>();
+                var vector = new List<double>();
                 
                 foreach (var vocab in vocabularyIDF)
                 {
                     // Term frequency = count how many times the term appears in this document.
-                    double tf = doc.Where(d => d == vocab.Key).Count();
-                    double tfidf = tf * vocab.Value;
+                    var tf = doc.Count(d => d == vocab.Key);
+                    var tfidf = tf * vocab.Value;
 
                     AddOnWordsArray(ref words, vocab.Key, tfidf);
                     
@@ -81,7 +80,7 @@ namespace Main
             
             Console.WriteLine("TFIDF finished");
 
-            return words.Select(word => word.Word).ToList();
+            return words.Select(word => word.Word + " " + word.Score).ToList();
         }
 
         private static void AddOnWordsArray(ref List<WordAndScore> words, string key, double tfidf)
@@ -114,7 +113,7 @@ namespace Main
         public static double[][] Normalize(double[][] vectors)
         {
             // Normalize the vectors using L2-Norm.
-            List<double[]> normalizedVectors = new List<double[]>();
+            var normalizedVectors = new List<double[]>();
             foreach (var vector in vectors)
             {
                 var normalized = Normalize(vector);
@@ -126,58 +125,46 @@ namespace Main
 
         public static double[] Normalize(double[] vector)
         {
-            List<double> result = new List<double>();
+            var sumSquared = vector.Sum(value => value*value);
 
-            double sumSquared = 0;
-            foreach (var value in vector)
-            {
-                sumSquared += value * value;
-            }
+            var sqrtSumSquared = Math.Sqrt(sumSquared);
 
-            double SqrtSumSquared = Math.Sqrt(sumSquared);
-
-            foreach (var value in vector)
-            {
-                // L2-norm: Xi = Xi / Sqrt(X0^2 + X1^2 + .. + Xn^2)
-                result.Add(value / SqrtSumSquared);
-            }
-
-            return result.ToArray();
+            return vector.Select(value => value/sqrtSumSquared).ToArray();
         }
 
         public static void Save(string filePath = "vocabulary.dat")
         {
             // Save result to disk.
-            using (FileStream fs = new FileStream(filePath, FileMode.Create))
+            using (var fs = new FileStream(filePath, FileMode.Create))
             {
-                BinaryFormatter formatter = new BinaryFormatter();
-                formatter.Serialize(fs, _vocabularyIDF);
+                var formatter = new BinaryFormatter();
+                formatter.Serialize(fs, _vocabularyIdf);
             }
         }
 
         public static void Load(string filePath = "vocabulary.dat")
         {
             // Load from disk.
-            using (FileStream fs = new FileStream(filePath, FileMode.Open))
+            using (var fs = new FileStream(filePath, FileMode.Open))
             {
-                BinaryFormatter formatter = new BinaryFormatter();
-                _vocabularyIDF = (Dictionary<string, double>)formatter.Deserialize(fs);
+                var formatter = new BinaryFormatter();
+                _vocabularyIdf = (Dictionary<string, double>)formatter.Deserialize(fs);
             }
         }
 
         #region Private Helpers
 
-        private static List<string> GetVocabulary(string[] docs, out List<List<string>> stemmedDocs, int vocabularyThreshold,  bool isNeg)
+        private static IEnumerable<string> GetVocabulary(string[] docs, out List<List<string>> stemmedDocs, int vocabularyThreshold,  bool isNeg)
         {
-            List<string> vocabulary = new List<string>();
-            Dictionary<string, int> wordCountList = new Dictionary<string, int>();
+            var vocabulary = new List<string>();
+            var wordCountList = new Dictionary<string, int>();
             stemmedDocs = new List<List<string>>();
 
-            int docIndex = 0;
+            var docIndex = 0;
 
             foreach (var doc in docs)
             {
-                List<string> stemmedDoc = new List<string>();
+                var stemmedDoc = new List<string>();
 
                 docIndex++;
 
@@ -186,20 +173,20 @@ namespace Main
                     Console.WriteLine("Processing " + docIndex + "/" + docs.Length);
                 }
 
-                string[] parts2 = Tokenize(doc);
+                var parts2 = Tokenize(doc);
 
-                List<string> words = new List<string>();
-                foreach (string part in parts2)
+                var words = new List<string>();
+                foreach (var part in parts2)
                 {
-                    // Strip non-alphanumeric characters.
-                    string stripped = Regex.Replace(part, "[^a-zA-Z0-9]", "");
+// Strip non-alphanumeric characters.
+                    var stripped = Regex.Replace(part, "[^a-zA-Z0-9]", "");
 
                     if (!StopWords.StopWordsList(isNeg).Contains(stripped.ToLower()))
                     {
                         try
                         {
                             var english = new EnglishWord(stripped);
-                            string stem = english.Stem;
+                            var stem = english.Stem;
                             words.Add(stem);
 
                             if (stem.Length > 0)
