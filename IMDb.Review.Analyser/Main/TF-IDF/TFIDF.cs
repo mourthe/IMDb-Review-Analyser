@@ -80,7 +80,7 @@ namespace Main
             
             Console.WriteLine("TFIDF finished");
 
-            return words.Select(word => word.Word + " " + word.Score).ToList();
+            return words.Select(word => word.Word).ToList();
         }
 
         private static void AddOnWordsArray(ref List<WordAndScore> words, string key, double tfidf)
