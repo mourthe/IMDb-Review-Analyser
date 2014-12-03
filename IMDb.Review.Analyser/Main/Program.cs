@@ -12,10 +12,10 @@ namespace Main
         static void Main(string[] args)
         {
             var reader = new FileReader();
-            // reader.InitializeReviews(@"..\..\..\dataset\part1\neg");
-            var topWordsNeg = new List<string>(); // TFIDF.Transform(ref reader.AllReviews.Content, ref reader.AllReviews, true);
+            //  reader.InitializeReviews(@"..\..\..\dataset\part1\neg");
+            var topWordsNeg = new List<string>(); //  TFIDF.Transform(ref reader.AllReviews.Content, ref reader.AllReviews, true);
 
-            reader.Clear();
+            // reader.Clear();
             reader.InitializeReviews(@"..\..\..\dataset\part1\pos");
             var topWordsPos = TFIDF.Transform(ref reader.AllReviews.Content, ref reader.AllReviews, false);
 

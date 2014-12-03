@@ -20,31 +20,6 @@ namespace Main
         }
     }
 
-    /// <summary>
-    /// Copyright (c) 2013 Kory Becker http://www.primaryobjects.com/kory-becker.aspx
-    /// 
-    /// Permission is hereby granted, free of charge, to any person obtaining
-    /// a copy of this software and associated documentation files (the
-    /// "Software"), to deal in the Software without restriction, including
-    /// without limitation the rights to use, copy, modify, merge, publish,
-    /// distribute, sublicense, and/or sell copies of the Software, and to
-    /// permit persons to whom the Software is furnished to do so, subject to
-    /// the following conditions:
-    /// 
-    /// The above copyright notice and this permission notice shall be
-    /// included in all copies or substantial portions of the Software.
-    /// 
-    /// Description:
-    /// Performs a TF*IDF (Term Frequency * Inverse Document Frequency) transformation on an array of documents.
-    /// Each document string is transformed into an array of doubles, cooresponding to their associated TF*IDF values.
-    /// 
-    /// Usage:
-    /// string[] documents = LoadYourDocuments();
-    ///
-    /// double[][] inputs = TFIDF.Transform(documents);
-    /// inputs = TFIDF.Normalize(inputs);
-    /// 
-    /// </summary>
     public static class TFIDF
     {
         private static Dictionary<string, double> _vocabularyIDF = new Dictionary<string, double>();
@@ -113,14 +88,14 @@ namespace Main
         {
             var nWord = new WordAndScore(key, tfidf);
             
-            if (words.Count < 80)
+            if (words.Count < 100)
             {
                 words.Add(nWord);
             }
             else
             {
                 var w = words[0];
-                for (var i = 1; i < 80; i++)
+                for (var i = 1; i < 100; i++)
                 {
                     if (w.Score < words[i].Score)
                     {
@@ -136,10 +111,6 @@ namespace Main
             }
         }
 
-        /// <summary>
-        /// Normalizes a TF*IDF array of vectors using L2-Norm.
-        /// Xi = Xi / Sqrt(X0^2 + X1^2 + .. + Xn^2)
-        /// </summary>
         public static double[][] Normalize(double[][] vectors)
         {
             // Normalize the vectors using L2-Norm.
@@ -153,10 +124,6 @@ namespace Main
             return normalizedVectors.ToArray();
         }
 
-        /// <summary>
-        /// Normalizes a TF*IDF vector using L2-Norm.
-        /// Xi = Xi / Sqrt(X0^2 + X1^2 + .. + Xn^2)
-        /// </summary>
         public static double[] Normalize(double[] vector)
         {
             List<double> result = new List<double>();
@@ -178,10 +145,6 @@ namespace Main
             return result.ToArray();
         }
 
-        /// <summary>
-        /// Saves the TFIDF vocabulary to disk.
-        /// </summary>
-        /// <param name="filePath">File path</param>
         public static void Save(string filePath = "vocabulary.dat")
         {
             // Save result to disk.
@@ -192,10 +155,6 @@ namespace Main
             }
         }
 
-        /// <summary>
-        /// Loads the TFIDF vocabulary from disk.
-        /// </summary>
-        /// <param name="filePath">File path</param>
         public static void Load(string filePath = "vocabulary.dat")
         {
             // Load from disk.
@@ -208,12 +167,6 @@ namespace Main
 
         #region Private Helpers
 
-        /// <summary>
-        /// Parses and tokenizes a list of documents, returning a vocabulary of words.
-        /// </summary>
-        /// <param name="docs">string[]</param>
-        /// <param name="stemmedDocs">List of List of string</param>
-        /// <returns>Vocabulary (list of strings)</returns>
         private static List<string> GetVocabulary(string[] docs, out List<List<string>> stemmedDocs, int vocabularyThreshold,  bool isNeg)
         {
             List<string> vocabulary = new List<string>();
@@ -283,11 +236,6 @@ namespace Main
             return vocabulary;
         }
 
-        /// <summary>
-        /// Tokenizes a string, returning its list of words.
-        /// </summary>
-        /// <param name="text">string</param>
-        /// <returns>string[]</returns>
         private static string[] Tokenize(string text)
         {
             // Strip all HTML.

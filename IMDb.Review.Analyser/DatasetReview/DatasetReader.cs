@@ -49,7 +49,8 @@ namespace DatasetReview
 
             return
                 (from word in _words
-                    where word.NumberNeg > 1.5*word.NumberPos || 1.5*word.NumberNeg < word.NumberPos
+                 where word.NumberNeg - word.NumberPos > 0.5 * (word.NumberPos + word.NumberNeg) / 2 || 
+                       word.NumberPos - word.NumberNeg > 0.5 * (word.NumberPos + word.NumberNeg) / 2
                     select word.Value).ToList();
         }
 
