@@ -6,25 +6,25 @@ import java.util.Calendar;
 import java.util.Random;
 
 import weka.classifiers.Evaluation;
-import weka.classifiers.lazy.IBk;
+import weka.classifiers.functions.LibSVM;
 import weka.core.Instance;
 import weka.core.Instances;
-import weka.core.neighboursearch.BallTree;
+import weka.core.SelectedTag;
 
 
-public class Knn {
+public class Svm {
 
-	private int folds = 2 ;
+	private int folds = 10 ;
 	private Instances data ;
 	private Instance realTest ;
-	private IBk ibk = new IBk(1);
+	private LibSVM svm = new LibSVM();
 	Evaluation ev;
 	
-	public Knn(String pathFile, int folds){
+	public Svm(String pathFile, int folds){
 		
 		try {
 
-			BufferedReader reader = new BufferedReader( new FileReader("E:\\Documentos\\PUC-Rio_Trabalhos\\IntArtificial\\MachineLearning\\PokeFiles\\pokemons_bestKn_noMissing.arff"));
+			BufferedReader reader = new BufferedReader( new FileReader(pathFile));
 			data = new Instances(reader);			
 			reader.close();
 			// setting class attribute
@@ -32,8 +32,7 @@ public class Knn {
 			realTest = data.firstInstance();
 			data.delete(0);
 			this.folds = folds;
-			
-			ibk.setNearestNeighbourSearchAlgorithm(new BallTree());
+            svm.setKernelType(new SelectedTag(LibSVM.KERNELTYPE_LINEAR, LibSVM.TAGS_KERNELTYPE));
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -46,7 +45,7 @@ public class Knn {
 	
 		ev = new Evaluation(data);
 		try {
-			ev.crossValidateModel(ibk, data, folds, new Random(Calendar.MILLISECOND));
+			ev.crossValidateModel(svm, data, folds, new Random(Calendar.MILLISECOND));
 			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -56,8 +55,8 @@ public class Knn {
 		
 	public boolean doRealTest(){
 		try {
-			ibk.buildClassifier(data) ;
-			return ibk.classifyInstance(realTest) == realTest.classValue();
+			svm.buildClassifier(data) ;
+			return svm.classifyInstance(realTest) == realTest.classValue();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

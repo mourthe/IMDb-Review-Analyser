@@ -8,10 +8,10 @@ public class Main {
 	 */
 	public static void main(String[] args) throws Exception {
 		
-				Knn knn = new Knn("E:\\Documentos\\PUC-Rio_Trabalhos\\IntArtificial\\MachineLearning\\PokeFiles\\pokemons_bestKn_noMissing.arff", 95);
-				knn.buildModel();
-				System.out.println(knn.getResume());
-				System.out.println("Teste de classificacão real: " + knn.doRealTest());
+				Svm svm = new Svm("C:\\Projects\\Golang\\src\\dataset.arff", 10);
+                svm.buildModel();
+				System.out.println(svm.getResume());
+				System.out.println("Teste de classificacï¿½o real: " + svm.doRealTest());
 		
 	}
 	

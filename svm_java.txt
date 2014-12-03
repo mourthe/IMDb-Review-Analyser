@@ -1,0 +1,81 @@
+............*
+optimization finished, #iter = 12172
+nu = 0.7278461377663075
+obj = -15510.022685266278, rho = -0.3990412378838362
+nSV = 16652, nBSV = 16070
+Total nSV = 16652
+............*.*
+optimization finished, #iter = 12827
+nu = 0.7265641898157362
+obj = -15468.374405689106, rho = 0.3891676379540354
+nSV = 16617, nBSV = 16059
+Total nSV = 16617
+...........*
+optimization finished, #iter = 11866
+nu = 0.7262788949222967
+obj = -15475.639074129851, rho = -0.3661172712553041
+nSV = 16605, nBSV = 16060
+Total nSV = 16605
+..........
+WARNING: using -h 0 may be faster
+..*.*
+optimization finished, #iter = 12195
+nu = 0.7266596948326445
+obj = -15462.449953321388, rho = 0.32403409424217106
+nSV = 16620, nBSV = 16071
+Total nSV = 16620
+............*
+optimization finished, #iter = 12194
+nu = 0.7283084160341208
+obj = -15517.09214184647, rho = 0.2828933030992034
+nSV = 16657, nBSV = 16103
+Total nSV = 16657
+............*.*
+optimization finished, #iter = 13117
+nu = 0.723430856885906
+obj = -15400.8472238462, rho = 0.42207603227976254
+nSV = 16554, nBSV = 15994
+Total nSV = 16554
+.............*.*
+optimization finished, #iter = 13941
+nu = 0.7270271563373011
+obj = -15490.528479354929, rho = 0.3399867811477967
+nSV = 16621, nBSV = 16054
+Total nSV = 16621
+............*
+optimization finished, #iter = 12492
+nu = 0.7298009753212041
+obj = -15542.572070989512, rho = -0.3561554375447686
+nSV = 16710, nBSV = 16122
+Total nSV = 16710
+............*.*
+optimization finished, #iter = 13012
+nu = 0.7242362918137485
+obj = -15432.951388315778, rho = 0.3476238802236317
+nSV = 16548, nBSV = 16009
+Total nSV = 16548
+............*
+optimization finished, #iter = 12437
+nu = 0.7259849408906942
+obj = -15467.353664511447, rho = -0.3814974162018293
+nSV = 16622, nBSV = 16044
+Total nSV = 16622
+
+Correctly Classified Instances       17359               69.4388 %
+Incorrectly Classified Instances      7640               30.5612 %
+Kappa statistic                          0.3888
+Mean absolute error                      0.3056
+Root mean squared error                  0.5528
+Relative absolute error                 61.1224 %
+Root relative squared error            110.5644 %
+Total Number of Instances            24999     
+
+..............*.*
+optimization finished, #iter = 14340
+nu = 0.7231490385471615
+obj = -17146.67000523319, rho = 0.3735922734428164
+nSV = 18385, nBSV = 17741
+Total nSV = 18385
+Teste de classificac?o real: true
+
+Process finished with exit code 0
